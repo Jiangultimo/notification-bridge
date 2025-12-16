@@ -1,0 +1,33 @@
+basePath: /
+definitions:
+  handler.HealthResponse:
+    properties:
+      status:
+        type: string
+      time:
+        type: string
+    type: object
+info:
+  contact: {}
+  description: Main entry point for the Notification Bridge API server.
+  title: Notification Bridge API Server
+  version: 1.0.0
+paths:
+  /healthz:
+    get:
+      description: Returns the health status of the service.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.HealthResponse'
+        "405":
+          description: Method Not Allowed
+          schema:
+            type: string
+      summary: Health Check Endpoint
+      tags:
+      - Health
+swagger: "2.0"
