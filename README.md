@@ -37,7 +37,7 @@ The server will start at `http://localhost:8000`
 ### Run Without Hot Reload
 
 ```bash
-go run ./src/api
+go run ./cmd/server
 ```
 
 ## API Documentation
@@ -49,5 +49,5 @@ Swagger UI is available at: `http://localhost:8000/swagger/`
 When you modify API annotations, regenerate the docs:
 
 ```bash
-swag init -g ./src/api/main.go -o ./docs
+swag init -g ./cmd/server/main.go -o ./docs
 ```
