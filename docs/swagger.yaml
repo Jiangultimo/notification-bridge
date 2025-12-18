@@ -1,5 +1,18 @@
 basePath: /
 definitions:
+  handler.HealthEnvelope:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/handler.HealthResponse'
+      message:
+        type: string
+      request_id:
+        type: string
+      success:
+        type: boolean
+    type: object
   handler.HealthResponse:
     properties:
       status:
@@ -7,12 +20,95 @@ definitions:
       time:
         type: string
     type: object
+  response.ErrorEnvelope:
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+      request_id:
+        type: string
+      success:
+        type: boolean
+    type: object
+  types.AttachmentItem:
+    properties:
+      text:
+        description: JSON 字符串,需要二次解析
+        type: string
+      title:
+        type: string
+      title_link:
+        type: string
+    type: object
+  types.NetAlertXPayload:
+    properties:
+      attachments:
+        items:
+          $ref: '#/definitions/types.AttachmentItem'
+        type: array
+      text:
+        type: string
+      username:
+        type: string
+    type: object
+  webhook.NetAlertXEnvelope:
+    properties:
+      code:
+        type: integer
+      data:
+        $ref: '#/definitions/webhook.NetAlertXResponse'
+      message:
+        type: string
+      request_id:
+        type: string
+      success:
+        type: boolean
+    type: object
+  webhook.NetAlertXResponse:
+    properties:
+      message:
+        type: string
+      received:
+        type: boolean
+    type: object
 info:
   contact: {}
   description: Main entry point for the Notification Bridge API server.
   title: Notification Bridge API Server
   version: 1.0.0
 paths:
+  /api/webhook/netalertx:
+    post:
+      consumes:
+      - application/json
+      description: Receives webhook notifications from NetAlertX, logs and processes
+        the data
+      parameters:
+      - description: Webhook payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/types.NetAlertXPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Successfully received
+          schema:
+            $ref: '#/definitions/webhook.NetAlertXEnvelope'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+        "405":
+          description: Method Not Allowed
+          schema:
+            $ref: '#/definitions/response.ErrorEnvelope'
+      summary: NetAlertX Webhook Endpoint
+      tags:
+      - Webhook
   /healthz:
     get:
       description: Returns the health status of the service.
@@ -22,11 +118,11 @@ paths:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/handler.HealthResponse'
+            $ref: '#/definitions/handler.HealthEnvelope'
         "405":
           description: Method Not Allowed
           schema:
-            type: string
+            $ref: '#/definitions/response.ErrorEnvelope'
       summary: Health Check Endpoint
       tags:
       - Health
