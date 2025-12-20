@@ -1,0 +1,33 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+docs/
+*.md
+CLAUDE.md
+
+# Development
+tmp/
+.air.toml
+*.log
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
